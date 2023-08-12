@@ -3,6 +3,8 @@
 </svelte:head>
 
 <script lang="ts">
+    import { onMount } from "svelte";
+
     let wildAnimal: string = "🦘"
     let lines: Array<string> = [];
     let nLines: number = 5;
@@ -135,7 +137,7 @@
         randPos();
     }
 
-
+onMount(() => {
     window.addEventListener('keydown', function(e) {
         let pressedKey = e.code;
         if (pressedKey == 'KeyA' || pressedKey == 'KeyD' || pressedKey == 'KeyS' || pressedKey == 'KeyW')
@@ -157,6 +159,7 @@
         }
         
     });
+});
 
 
 
