@@ -6,6 +6,12 @@
     import { onMount } from "svelte";
 
     let wildAnimal: string = "🦘"
+    let emptySquare: string = "🟩"
+
+    let myInterval: number | null | undefined = null;
+
+    let randomMovement: boolean = false;
+    
     let lines: Array<string> = [];
     let nLines: number = 5;
     let nSpaces: number = 20;
@@ -15,7 +21,7 @@
     
     for (let s = 0; s < nSpaces; s++ )
     {
-        lines.push('🟩')
+        lines.push(emptySquare)
     }
     let lineBlok: Array<any> = []
     for (let i = 0; i <= nLines; i++)
@@ -29,6 +35,8 @@
     // clear field
     // move up and down
     // change animal
+
+
 
     enum Direction {
         Up,
@@ -109,8 +117,6 @@
     function randPos() {
         currentX = getRandomInt(nSpaces-1)
         currentY = getRandomInt(6)
-        console.log(currentY,currentX);
-        console.log(lineBlok[currentY][currentX])
         lineBlok[currentY][currentX] = wildAnimal;
         
     }
@@ -137,8 +143,10 @@
         randPos();
     }
 
+// window can only be accessed in browser not server 
 onMount(() => {
     window.addEventListener('keydown', function(e) {
+        
         let pressedKey = e.code;
         if (pressedKey == 'KeyA' || pressedKey == 'KeyD' || pressedKey == 'KeyS' || pressedKey == 'KeyW')
         {
@@ -163,6 +171,17 @@ onMount(() => {
 
 
 
+function toggleRandom() {
+
+    randomMovement = !randomMovement
+    if(randomMovement){
+        myInterval = setInterval(() => moveRandom(), 1000);
+    } else {
+        window.clearInterval(myInterval)
+    }
+}
+
+
 </script>
 
 <h1>Welcome to Typescript Zoo</h1>
@@ -172,7 +191,7 @@ onMount(() => {
 {/each}
 <br>
 
-<button on:click={() => (moveRandom())}> random </button>
+<button on:click={() => toggleRandom()}> random jump: {randomMovement}</button>
 <button on:click={() => (reset())}> clear </button>
 <br>
 <h2>You can also move with WASD!</h2>
