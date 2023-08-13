@@ -4,21 +4,28 @@
 
 <script lang="ts">
     import { onMount } from "svelte";
+    import MyTimer from './MyTimer.svelte';
+    import MyLogo from './MyLogo.svelte';
 
+    // states
+    let myInterval: number | null | undefined = null;
+    let randomMovement: boolean = false;
+    let timerOn: boolean = false;
+
+    
+    // "sprites"
     let wildAnimal: string = "🦘"
     let emptySquare: string = "🟩"
 
-    let myInterval: number | null | undefined = null;
 
-    let randomMovement: boolean = false;
-    
+    // grid vars
     let lines: Array<string> = [];
     let nLines: number = 5;
     let nSpaces: number = 20;
-    
     let currentX: number = 0;
     let currentY: number = 0;
     
+    // render field
     for (let s = 0; s < nSpaces; s++ )
     {
         lines.push(emptySquare)
@@ -31,13 +38,6 @@
         lineBlok.push(cloneLine)
     }
 
-    //to do 
-    // clear field
-    // move up and down
-    // change animal
-
-
-
     enum Direction {
         Up,
         Down,
@@ -45,7 +45,7 @@
         Right,
     }
 
-
+    // manual movement 
     function moveMe(nextMove: Direction) {
         //let deltaX: number = 0;
         //let deltaY: number = 0;
@@ -70,16 +70,6 @@
                 movePosition2(currentX+1, currentY);
                 return;
         }
-        
-        console.log(currentX, currentY);
-
-        //currentX = currentX + deltaX;
-        //currentY = currentY + deltaY;
-        //console.log(deltaX, deltaY);
-        //console.log(currentX, currentY);
-        
-        //movePosition(currentX, currentY);
-
     }
 
     function movePosition2(x: number, y: number) {
@@ -89,19 +79,6 @@
             currentX = x;
             currentY = y;
             clear();
-            lineBlok[y][x] = wildAnimal;
-        }
-        else {
-            console.log("move out of bounds");
-        }
-        //return 0;
-    }
-
-    function movePosition(x: number, y: number) {
-        currentX = x;
-        currentY = y;
-        if(x < nSpaces && y < nLines)
-        {
             lineBlok[y][x] = wildAnimal;
         }
         else {
@@ -177,14 +154,19 @@ function toggleRandom() {
     if(randomMovement){
         myInterval = setInterval(() => moveRandom(), 1000);
     } else {
-        window.clearInterval(myInterval)
+        window.clearInterval(myInterval) // error message for any type
     }
 }
 
 
 </script>
 
-<h1>Welcome to Typescript Zoo</h1>
+<MyLogo/>
+
+
+{#if timerOn}
+<MyTimer/>
+{/if}
 
 {#each lineBlok as line, index}
     <p>{line.join('')} - {index}</p>
@@ -199,3 +181,6 @@ function toggleRandom() {
 <button on:click={() => (moveMe(Direction.Down))}> Down </button>
 <button on:click={() => (moveMe(Direction.Left))}> Left </button>
 <button on:click={() => (moveMe(Direction.Right))}> Right </button>
+<br>
+<button on:click={() => timerOn = !timerOn}> timer on : {timerOn} </button>
+
